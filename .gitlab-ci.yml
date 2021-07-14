@@ -4,7 +4,6 @@ stages:
   
   - test
   - review
-  - release
   - cleanup
 
 
@@ -16,40 +15,7 @@ test:
   only:
     - branches
 
-release:
-  stage: release
-  image: docker
-  services:
-    - docker:18.09.7-dind
-  variables:
-    CI_REGISTRY: 'index.docker.io'
-    CI_APPLICATION_REPOSITORY: $CI_REGISTRY/$CI_PROJECT_PATH
-    CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
-    CI_CONTAINER_NAME: ci_job_build_${CI_JOB_ID}
-  before_script:
-    - >
-      if ! docker info &>/dev/null; then
-        if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
-          export DOCKER_HOST='tcp://localhost:2375'
-        fi
-      fi
-  script:
-    # Releasing
-    - echo "Updating docker images ..."
-    - echo "docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD""
-    - >
-      if [[ -n "$CI_REGISTRY_USER" ]]; then
-        echo "Logging to GitLab Container Registry with CI credentials for release..."
-        docker login -u kirillkotovsky -p '098)(*Assa'
-      fi
-    - docker pull "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
-    - docker tag "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" "$CI_APPLICATION_REPOSITORY:$(cat VERSION)"
-    - docker push "$CI_APPLICATION_REPOSITORY:$(cat VERSION)"
-    # latest is neede for feature flags
-    - docker tag "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" "$CI_APPLICATION_REPOSITORY:latest"
-    - docker push "$CI_APPLICATION_REPOSITORY:latest"
-  only:
-    - master
+
 
 review:
   stage: review
