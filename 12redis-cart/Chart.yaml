@@ -1,0 +1,7 @@
+name: redis-cart
+version: 1.0.0
+description: redis-cart
+maintainers:
+ - name: insarov
+ - email: insarov@mail.com
+appVersion: 1.0

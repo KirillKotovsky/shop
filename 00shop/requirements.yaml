@@ -1,0 +1,50 @@
+---
+dependencies:
+  - name: emailservice
+    version: "1.0.0"
+    repository: "file://../2emailservice"
+
+  - name: checkoutservice
+    version: "1.0.0"
+    repository: "file://../3checkoutservice"
+
+  - name: recommendationservice
+    version: "1.0.0"
+    repository: "file://../4recommendationservice"
+
+  - name: frontend
+    version: "1.0.0"
+    repository: "file://../5frontend"
+
+  - name: frontend-external
+    version: "1.0.0"
+    repository: "file://../6frontend-external"
+
+  - name: paymentservice
+    version: "1.0.0"
+    repository: "file://../7paymentservice"
+
+  - name: productcatalogservice
+    version: "1.0.0"
+    repository: "file://../8productcatalogservice"
+
+  - name: cartservice
+    version: "1.0.0"
+    repository: "file://../9cartservice"
+
+  - name: currencyservice
+    version: "1.0.0"
+    repository: "file://../10currencyservice"
+
+  - name: shippingservice
+    version: "1.0.0"
+    repository: "file://../11shippingservice"
+
+  - name: redis-cart
+    version: "1.0.0"
+    repository: "file://../12redis-cart"
+
+  - name: adservice
+    version: "1.0.0"
+    repository: "file://../13adservice"
+

@@ -1,0 +1,7 @@
+name: paymentservice
+version: 1.0.0
+description: paymentservice
+maintainers:
+ - name: insarov
+ - email: insarov@mail.com
+appVersion: 1.0

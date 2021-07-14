@@ -1,0 +1,7 @@
+name: recommendationservice
+version: 1.0.0
+description: recommendationservice
+maintainers:
+ - name: insarov
+ - email: insarov@mail.com
+appVersion: 1.0
