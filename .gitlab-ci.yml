@@ -14,7 +14,7 @@ review:
   environment:
     name: review/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
     url: http://$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
-    on_stop: stop_review
+    
   only:
     refs:
       - branches
@@ -99,14 +99,14 @@ review:
         --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
         "$name" \
         deploy/00shop/
-stop_review:
+
   stage: cleanup
   variables:
-    GIT_STRATEGY: none
+    GIT_STRATEGY: noned
     name: $CI_ENVIRONMENT_SLUG
   environment:
     name: review/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
-    action: stop
+    
   when: manual
   allow_failure: true
   only:
