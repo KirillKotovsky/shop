@@ -10,7 +10,7 @@ deploy:
   stage: deploy
   image: alpine/helm:3.2.1
   script:
-    - helm install ${APP_NAME} deploy\00shop --install - --namespace ${APP_NAME}
+    - helm install ${APP_NAME} deploy\00shop --namespace ${APP_NAME}
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
