@@ -5,7 +5,7 @@ variables:
   DOCKER_HOST: tcp://localhost:2375/
   DOCKER_DRIVER: overlay2
   APP_NAME: shop
-  KUBE_NAMESPACE: review
+  KUBE_NAMESPACE: shop
   host: $CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
   TILLER_NAMESPACE: kube-system
   CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
