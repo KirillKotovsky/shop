@@ -2,6 +2,7 @@ image: alpine:latest
 
 stages:
   - review
+  - cleanup
 
 review:
   stage: review
