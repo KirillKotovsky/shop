@@ -11,9 +11,6 @@ variables:
   CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
   name: $CI_ENVIRONMENT_SLUG
 
-environment:
-  name: review/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
-  url: http://$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
 
 deploy:
   stage: deploy
