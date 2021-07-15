@@ -4,7 +4,7 @@ stages:
 variables:
   DOCKER_HOST: tcp://localhost:2375/
   DOCKER_DRIVER: overlay2
-  APP_NAME: my-first-app
+  APP_NAME: shop
 
 deploy:
   stage: deploy
