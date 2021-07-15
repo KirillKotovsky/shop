@@ -144,3 +144,4 @@ review:
     - echo "$name"
   script:
     - helm uninstall "$name" 
+
