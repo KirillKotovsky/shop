@@ -10,6 +10,12 @@ deploy:
   stage: deploy
   image: alpine/helm:3.2.1
   script:
+    - apk add -U openssl curl tar gzip bash ca-certificates git
+    - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.23-r3/glibc-2.23-r3.apk
+    - apk add glibc-2.23-r3.apk
+    - curl https://storage.googleapis.com/pub/gsutil.tar.gz | tar -xz -C $HOME
+    - export PATH=${PATH}:$HOME/gsutil
     - git clone http://178.154.212.19/$CI_PROJECT_NAMESPACE/deploy.git
     - helm install ${APP_NAME} --namespace ${APP_NAME} deploy/00shop/
   rules:
