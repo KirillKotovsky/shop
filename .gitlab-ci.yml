@@ -5,6 +5,15 @@ variables:
   DOCKER_HOST: tcp://localhost:2375/
   DOCKER_DRIVER: overlay2
   APP_NAME: shop
+  KUBE_NAMESPACE: review
+  host: $CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
+  TILLER_NAMESPACE: kube-system
+  CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
+  name: $CI_ENVIRONMENT_SLUG
+
+environment:
+  name: review/$CI_PROJECT_PATH/$CI_COMMIT_REF_NAME
+  url: http://$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
 
 deploy:
   stage: deploy
@@ -16,8 +25,24 @@ deploy:
     - apk add glibc-2.23-r3.apk
     - curl https://storage.googleapis.com/pub/gsutil.tar.gz | tar -xz -C $HOME
     - export PATH=${PATH}:$HOME/gsutil
+    #  Kubectl install
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    - kubectl version --client
+    # ensuring namespace
+    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+
     - git clone http://178.154.212.19/$CI_PROJECT_NAMESPACE/deploy.git
-    - helm upgrade ${APP_NAME} --namespace ${APP_NAME} deploy/00shop/
+    - helm dep update deploy/00shop
+    - helm install \
+        --wait \
+        --set ui.ingress.host="$host" \
+        --set $CI_PROJECT_NAME.image.tag="$CI_APPLICATION_TAG" \
+        --namespace="$KUBE_NAMESPACE" \
+        --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
+        "$name" \
+        deploy/00shop/
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
