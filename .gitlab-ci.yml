@@ -10,8 +10,8 @@ variables:
   TILLER_NAMESPACE: kube-system
   CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
   name: $CI_ENVIRONMENT_SLUG
-
-deploy:
+  
+configure development cluster:
   stage: deploy
   image: alpine/helm:3.2.1
   before_script:
