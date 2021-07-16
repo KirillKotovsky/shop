@@ -26,9 +26,6 @@ deploy:
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
-    - git clone http://178.154.212.19/$CI_PROJECT_NAMESPACE/shop.git
-    - mkdir ~/.kube
-    - cp shop/config ~/.kube/config
     - kubectl version --client
     # ensuring namespace
     - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
