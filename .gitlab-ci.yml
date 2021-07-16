@@ -17,7 +17,11 @@ configure development cluster:
     - chmod +x ./kubectl
     - mv ./kubectl /usr/local/bin/kubectl
     - kubectl version --client
-  script: kubectl get namespaces
+  script: 
+    - kubectl get namespaces
+    - git clone http://178.154.212.19/$CI_PROJECT_NAMESPACE/shop.git
+    - helm dep update shop/00shop
+    - helm install --namespace shop shop ./shop/00shop
   environment:
     name: development
 
