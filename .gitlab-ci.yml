@@ -35,12 +35,10 @@ deploy:
     - helm dep update shop/00shop
     - helm install \
         --wait \
-        --set ui.ingress.host="$host" \
-        --set $CI_PROJECT_NAME.image.tag="$CI_APPLICATION_TAG" \
         --namespace="$KUBE_NAMESPACE" \
-        --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
         "$name" \
-        shop/00shop/
+        shop/00shop
+        
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
