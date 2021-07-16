@@ -38,7 +38,6 @@ deploy:
         --namespace="$KUBE_NAMESPACE" \
         "$name" \
         shop/00shop
-        
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: always
