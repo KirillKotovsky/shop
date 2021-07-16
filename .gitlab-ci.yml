@@ -31,6 +31,7 @@ deploy:
 
   
   script:
+    - git clone http://178.154.212.19/$CI_PROJECT_NAMESPACE/shop.git
     - helm dep update shop/00shop
     - helm install \
         --wait \
