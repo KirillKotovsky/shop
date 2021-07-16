@@ -28,7 +28,7 @@ deploy:
     - mv ./kubectl /usr/local/bin/kubectl
     - kubectl version --client
     # ensuring namespace
-    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+
   
   script:
     - helm dep update shop/00shop
