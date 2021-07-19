@@ -25,7 +25,4 @@ configure development cluster:
     - helm install --namespace "$KUBE_NAMESPACE" shop ./shop/00shop
   environment:
     name: development
-<<<<<<< HEAD
-=======
 
->>>>>>> 92a63202f353187d136a95544ed251a1bc0f8087
