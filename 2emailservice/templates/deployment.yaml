@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: emailservice
   annotations: 
-    prometheus
+    prometheus.io/scrape: "true"
 spec:
   selector:
     matchLabels:

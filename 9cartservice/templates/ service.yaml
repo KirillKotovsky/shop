@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: cartservice
   annotations: 
-    prometheus
+    prometheus.io/scrape: "true"
 spec:
   type: ClusterIP
   selector:

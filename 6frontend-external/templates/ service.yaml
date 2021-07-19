@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: frontend-external
   annotations: 
-    prometheus
+    prometheus.io/scrape: "true"
 spec:
   type: LoadBalancer
   selector:
