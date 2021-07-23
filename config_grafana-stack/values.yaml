@@ -2246,10 +2246,7 @@ prometheus:
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
     additionalScrapeConfigs: 
-      - job_name: 'static-svc-endpoint-adservice'
-        static_configs:
-          - targets:
-            - 'adservice:9555'
+
 
     
     
