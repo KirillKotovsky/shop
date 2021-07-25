@@ -1,4 +1,4 @@
-# shop
+# Проектная работа в рамках обучающего курса Otus - "Devops практики и инструменты".
 Данный проект демонстрирует развертывание микросервисного приложения https://github.com/GoogleCloudPlatform/microservices-demo в kubernetes </p>
 Автоматизация развертывания kubernetes cluster выполнена при помощи terraform для yandex cloud </p>
 В качестве менеджера установки приложения в kubernetes используются helm 3 </p>
@@ -14,7 +14,7 @@
 5. Передать код приложения из дериектории helmcharts_shop в репозиторий gitlab ci (деплой приложения в kubernetes будет выполнен автоматически) </p>
 6. Доступ к приложению можно получить перейдя на external ip адресс. Найти ip адрес можно выполнив команду </p>
 >kubctl get svc -n <namespace>  </p>
-8. Запуск системы мониторинга производится из официального репозитория prometheus, для запуска с необходимыми параметрами используйте values.yaml </p>
+8. Запуск системы мониторинга производится из официального репозитория prometheus, для запуска необходимыми параметрами используйте values.yaml </p>
 
 >helm repo add bitnami https://charts.bitnami.com/bitnami </p>
 >helm install nginx  bitnami/nginx-ingress-controller </p>
