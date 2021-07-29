@@ -208,11 +208,11 @@ alertmanager:
   #       {{ end }}
 
   ingress:
-    enabled: true
+    enabled: false
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    ingressClassName: nginx
+    # ingressClassName: nginx
 
     annotations: {}
 
@@ -220,18 +220,17 @@ alertmanager:
 
     ## Hosts must be provided if Ingress is enabled.
     ##
-    hosts: 
-      - alert
+    hosts: []
       # - alertmanager.domain.com
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
-    #paths: []
+    paths: []
     # - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    pathType: ImplementationSpecific
+    # pathType: ImplementationSpecific
 
     ## TLS configuration for Alertmanager Ingress
     ## Secret must be manually created in the namespace
@@ -631,7 +630,7 @@ grafana:
   ingress:
     ## If true, Grafana Ingress will be created
     ##
-    enabled: true
+    enabled: false
 
     ## Annotations for Grafana Ingress
     ##
@@ -648,8 +647,7 @@ grafana:
     ##
     # hosts:
     #   - grafana.domain.com
-    hosts: 
-      - grafana
+    hosts: []
 
     ## Path for grafana ingress
     path: /
@@ -1564,7 +1562,7 @@ prometheusOperator:
   ##
   image:
     repository: quay.io/prometheus-operator/prometheus-operator
-    tag: v0.48.1
+    tag: v0.49.0
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -1580,7 +1578,7 @@ prometheusOperator:
   ##
   prometheusConfigReloaderImage:
     repository: quay.io/prometheus-operator/prometheus-config-reloader
-    tag: v0.48.1
+    tag: v0.49.0
     sha: ""
 
   ## Set the prometheus config reloader side-car CPU limit
@@ -1651,6 +1649,8 @@ prometheus:
     portName: grpc
     port: 10901
     targetPort: "grpc"
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
 
     ## Service type
     ##
@@ -1735,7 +1735,7 @@ prometheus:
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    #ingressClassName: nginx
+    # ingressClassName: nginx
 
     annotations: {}
     labels: {}
@@ -1749,7 +1749,7 @@ prometheus:
     ## Hosts must be provided if Ingress is enabled.
     ##
     hosts: []
-      
+      # - thanos-gateway.domain.com
 
     ## Paths to use for ingress rules
     ##
@@ -1769,11 +1769,11 @@ prometheus:
     #   - thanos-gateway.domain.com
 
   ingress:
-    enabled: true
+    enabled: false
 
     # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    ingressClassName: nginx
+    # ingressClassName: nginx
 
     annotations: {}
     labels: {}
@@ -1783,17 +1783,16 @@ prometheus:
     ##
     # hosts:
     #   - prometheus.domain.com
-    hosts: 
-      - prometheus
+    hosts: []
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix
     ##
-    paths: 
-     - /
+    paths: []
+    # - /
 
     ## For Kubernetes >= 1.18 you should specify the pathType (determines how Ingress paths should be matched)
     ## See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#better-path-matching-with-path-types
-    pathType: ImplementationSpecific
+    # pathType: ImplementationSpecific
 
     ## TLS configuration for Prometheus Ingress
     ## Secret must be manually created in the namespace
@@ -1931,7 +1930,7 @@ prometheus:
     ##
     image:
       repository: quay.io/prometheus/prometheus
-      tag: v2.27.1
+      tag: v2.28.1
       sha: ""
 
     ## Tolerations for use with node taints
@@ -2245,85 +2244,34 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: 
-      - job_name: prometheus
-        static_configs:
-          targets:
-            localhost:9090
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-
-      - job_name: kubernetes-apiservers
-        kubernetes_sd_configs:
-          - role: endpoints
-        relabel_configs:
-          - source_labels:
-            - __meta_kubernetes_namespace
-            - __meta_kubernetes_service_name
-            - __meta_kubernetes_endpoint_port_name
-            action: keep
-            regex: default;kubernetes;https
-        scheme: https
-        tls_config:
-        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-        insecure_skip_verify: true
-        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-    
-      - job_name: 'kubernetes-svc-shop-endpoints'
-        scheme: http
-        follow_redirects: true
-        metrics_path: /metrics
-        kubernetes_sd_configs:
-          - role: endpoints
-            follow_redirects: true
-            namespaces:
-              names:
-                - shop-10-development
-        relabel_configs:
-        - source_labels: [__meta_kubernetes_Service_annotations_prometheus_io_scrape]
-          separator: ;
-          regex: "true"
-          action: keep
-          replacement: ${1}   
-    
-    
-  #    - job_name: 'kubernetes-nodes'
-  #      kubernetes_sd_configs:
-  #        - role: node
-
-
-
-  #  - job_name: kube-etcd
-  #    kubernetes_sd_configs:
-  #      - role: node
-  #    scheme: https
-  #    tls_config:
-  #      ca_file:   /etc/prometheus/secrets/etcd-client-cert/etcd-ca
-  #      cert_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client
-  #      key_file:  /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
-  #    relabel_configs:
-  #    - action: labelmap
-  #      regex: __meta_kubernetes_node_label_(.+)
-  #    - source_labels: [__address__]
-  #      action: replace
-  #      targetLabel: __address__
-  #      regex: ([^:;]+):(\d+)
-  #      replacement: ${1}:2379
-  #    - source_labels: [__meta_kubernetes_node_name]
-  #      action: keep
-  #      regex: .*mst.*
-  #    - source_labels: [__meta_kubernetes_node_name]
-  #      action: replace
-  #      targetLabel: node
-  #      regex: (.*)
-  #      replacement: ${1}
-  #    - source_labels: [__meta_kubernetes_service_annotations_io_scrape]
-  #      separator: ;
-  #      regex: "true"
-  #      action: keep
-  #      replacement: ${1}
-  #    metric_relabel_configs:
-  #    - regex: (kubernetes_io_hostname|failure_domain_beta_kubernetes_io_region|beta_kubernetes_io_os|beta_kubernetes_io_arch|beta_kubernetes_io_instance_type|failure_domain_beta_kubernetes_io_zone)
-  #      action: labeldrop
+    additionalScrapeConfigs: []
+    # - job_name: kube-etcd
+    #   kubernetes_sd_configs:
+    #     - role: node
+    #   scheme: https
+    #   tls_config:
+    #     ca_file:   /etc/prometheus/secrets/etcd-client-cert/etcd-ca
+    #     cert_file: /etc/prometheus/secrets/etcd-client-cert/etcd-client
+    #     key_file:  /etc/prometheus/secrets/etcd-client-cert/etcd-client-key
+    #   relabel_configs:
+    #   - action: labelmap
+    #     regex: __meta_kubernetes_node_label_(.+)
+    #   - source_labels: [__address__]
+    #     action: replace
+    #     targetLabel: __address__
+    #     regex: ([^:;]+):(\d+)
+    #     replacement: ${1}:2379
+    #   - source_labels: [__meta_kubernetes_node_name]
+    #     action: keep
+    #     regex: .*mst.*
+    #   - source_labels: [__meta_kubernetes_node_name]
+    #     action: replace
+    #     targetLabel: node
+    #     regex: (.*)
+    #     replacement: ${1}
+    #   metric_relabel_configs:
+    #   - regex: (kubernetes_io_hostname|failure_domain_beta_kubernetes_io_region|beta_kubernetes_io_os|beta_kubernetes_io_arch|beta_kubernetes_io_instance_type|failure_domain_beta_kubernetes_io_zone)
+    #     action: labeldrop
 
     ## If additional scrape configurations are already deployed in a single secret file you can use this section.
     ## Expected values are the secret name and key
