@@ -26,7 +26,7 @@ terraform apply
     
    4.5 Получить токе ``kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ``
  
-   4.6 На вкладке Aplication довать gitlab-runner в кластер </p>
+   4.6 На вкладке Aplication добавить gitlab-runner в кластер </p>
    
 
 5. Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). Выполнить ```sh kubectl apply -f ./mesh_monitoring  ``` 
