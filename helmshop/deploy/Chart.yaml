@@ -1,0 +1,7 @@
+name: deploy
+version: 1.0.0
+description: deploy
+maintainers:
+ - name: insarov
+ - email: insarov@mail.com
+appVersion: 1.0
