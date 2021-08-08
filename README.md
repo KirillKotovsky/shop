@@ -16,24 +16,26 @@ terraform apply
    
    4.1 Вывести адрес для подключения
  
- ```sh kubectl cluster-info | grep -E 'Kubernetes master|Kubernetes control plane' | awk '/http/ {print $NF}' ```
+ ``` kubectl cluster-info | grep -E 'Kubernetes master|Kubernetes control plane' | awk '/http/ {print $NF}' ```
 
-   4.2  ```sh kubectl get secrets```  Вывод секрета использовать в следующей команде, подставив свое значение токена для получения сертификата
+   4.2  ``` kubectl get secrets```  Вывод секрета использовать в следующей команде, подставив свое значение токена для получения сертификата
 
-   4.3 ```sh kubectl get secret default-token-9qdr9 -o jsonpath="{['data']['ca\.crt']}" | base64 --decode  ```
+   4.3 ``` kubectl get secret default-token-9qdr9 -o jsonpath="{['data']['ca\.crt']}" | base64 --decode  ```
 
-   4.4 Применить настройки из файла в репозитории ```sh kubectl apply -f gitlab_k8s_integation/gitlab-admin-service-account.yaml ```
+   4.4 Применить настройки из файла в репозитории ``` kubectl apply -f gitlab_k8s_integation/gitlab-admin-service-account.yaml ```
     
-   4.5 Получить токе ```sh kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ```
+   4.5 Получить токе ``kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ``
  
    4.6 На вкладке Aplication довать gitlab-runner в кластер </p>
    
-5. Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). Выполнить ```sh kubectl apply -f ./mesh_monitoring  ``` 
 
-6. Передать код приложения из дериектории helmshop в репозиторий gitlab ci <p>
-   6.1 Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится <p>
+5. Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). Выполнить ```sh kubectl apply -f ./mesh_monitoring  ``` 
+6. Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
+
+7. Передать код приложения из дериектории helmshop в репозиторий gitlab ci <p>
+   7.1 Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится <p>
      
-7. Доступ к приложению можно получить перейдя на external ip адресс. Найти ip адрес можно выполнив команду <p>
+8. Доступ к приложению можно получить перейдя на external ip адресс. Найти ip адрес можно выполнив команду <p>
  
 ```sh
 kubctl get svc -n istio-system  
