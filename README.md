@@ -1,4 +1,4 @@
-# Проектная работа в рамках обучающего курса Otus - "Devops практики и инструменты".
+# Проектная работа в рамках обучающего курса Otus -</p> "Devops практики и инструменты".
 Данный проект демонстрирует развертывание микросервисного приложения https://github.com/GoogleCloudPlatform/microservices-demo в kubernetes <p>
 Автоматизация развертывания kubernetes cluster выполнена при помощи terraform для yandex cloud <p>
 В качестве менеджера установки приложения в kubernetes используются helm 3 <p>
@@ -35,9 +35,17 @@ terraform apply
 7. Передать код приложения из дериектории helmshop в репозиторий gitlab ci <p>
    7.1 Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится <p>
      
-8. Доступ к приложению можно получить перейдя на external ip адресс. Найти ip адрес можно выполнив команду <p>
+8. Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду <p>
  
 ```sh
 kubctl get svc -n istio-system  
 ```
-
+ 
+9. Для доступа к системам мониторинга внести записи в hosts вашей операционной системы<p>
+   
+```sh   
+<external-ip nginx> prometheus
+<external-ip nginx> grafana
+<external-ip nginx> kiali
+<external-ip nginx> kibana
+```
