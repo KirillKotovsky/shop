@@ -7,6 +7,16 @@ metadata:
   namespace: istio-system
 spec:
   rules:
+    - host: kibana
+      http:
+        paths:
+          - backend:
+              service:
+                name: efk-kibana
+                port:
+                  number: 30010
+            path: /
+            pathType: Prefix
     - host: prometheus
       http:
         paths:

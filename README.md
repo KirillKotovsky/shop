@@ -6,13 +6,20 @@
 Мониторинг приложения производится с использованием Istio, Prometheus, визуализация в Kiali, Grafana <p>
 
 Для запуска проекта необходимо: <p>
-1. Подключиться к вашему яндекс облаку <p>
-2. Выполнить код из директории terraform для создания кластера k8s <p> 
-```sh 
-terraform apply 
-```
-3. Развернуть виртуальную машину с Gitlab CI, используя c помощью кода в директории terraform (см. terraform/gitlab/readme )<p>
-4. Произвести интеграцию Gitlab CI c кластером kubernetes (в текущем проекте - операции - Kubernetes, подключиться к кластеру ):<p>
+1. Подключение к Yandex Cloud<p>
+   Подключитесь к аккаунту ндекс облака. 
+
+2. Создание класстера и группы ресурсов. <p>
+   Перейти в каталог terraform предвариельно заполнить секцию provider и resource в main.tf.
+   Переименовать terraform.tfvars.example в terraform.tfvars и заполнить переменные согласно вашим параметрам яндекс облака.
+   Выполните terraform apply 
+   В процессе должен будет создаться класстер и группа ресурсов.
+
+3. Рарзвертывание GitLab <p>
+   Развернуть виртуальную машину с Gitlab CI, используя кода в директории terraform (см. terraform/gitlab/readme )<p>
+
+4. Интеграция с GitLab <p>
+   Произвести интеграцию Gitlab CI c кластером kubernetes (в текущем проекте - операции - Kubernetes, подключиться к кластеру ):
    
    4.1 Вывести адрес для подключения
  
@@ -27,25 +34,38 @@ terraform apply
    4.5 Получить токе ``kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ``
  
    4.6 На вкладке Aplication добавить gitlab-runner в кластер </p>
-   
 
-5. Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). Выполнить ```sh kubectl apply -f ./mesh_monitoring  ``` 
-6. Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
+5. Развертывание Istio <p>
+   Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). 
+   Выполнить ```sh kubectl apply -f ./mesh_monitoring  ```
 
-7. Передать код приложения из дериектории helmshop в репозиторий gitlab ci <p>
-   7.1 Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится <p>
-     
-8. Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду <p>
- 
-```sh
-kubctl get svc -n istio-system  
-```
- 
-9. Для доступа к системам мониторинга внести записи в hosts вашей операционной системы<p>
+6. Установка NGINX Controller <p>
+   Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
+
+7. Развертывание приложения Shop <p>
+   Перейти в hemcharts_shop и выполнить команду helm install shop ./shop/ -f value.yml
+
+8. GitLab CI SHOP<p>
    
-```sh   
-<external-ip nginx> prometheus
-<external-ip nginx> grafana
-<external-ip nginx> kiali
-<external-ip nginx> kibana
-```
+   Передать код приложения из дериектории helmshop в репозиторий gitlab ci 
+   
+   В разделе Operations - k8s - Applications установите install Gitlab Runners для установки RUNNDER
+   
+   Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится
+
+   Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду kubctl get svc -n istio-system  
+9. Развертывание системы мониторинга kiali, protheus, grafana <p>
+   Перейти в istiorelease и выполнить kubeclt apply -f .
+   kubectl get pods -n istio-system 
+10. Развертывание EFK
+    Перейти в efk, выполнить helm upgrade --install efk -n efk .
+11. Проверка работоспособности <p>
+    Для доступа к системам мониторинга внести записи в hosts вашей операционной системы 
+
+   <external-ip nginx> prometheus
+   <external-ip nginx> grafana
+   <external-ip nginx> kiali
+   <external-ip nginx> kibana
+   <external-ip nginx> shop
+
+   Перейти в браузере, к примеру http://shop/

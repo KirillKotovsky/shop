@@ -1,0 +1,91 @@
+elasticsearch:
+  curator:
+    enabled: true
+    configMaps:
+      config_yml: |-
+        ---
+        client:
+          hosts:
+            - {{ template "elasticsearch.coordinating.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+          port: {{ .Values.coordinating.service.port }}
+          http_auth: admin:admin
+  image:
+    registry: docker.io
+    repository: sergbs/elastic
+    tag: 1
+  volumePermissions:
+    enabled: true
+
+  extraVolumes:
+  - name: config
+    secret:
+      secretName: opendistro-config
+      items:
+        - key: config.yml
+          path: config.yml
+  - name: roles-mapping
+    secret:
+      secretName: opendistro-config
+      items:
+        - key: roles_mapping.yml
+          path: roles_mapping.yml
+  - name: internal-users
+    secret:
+      secretName: opendistro-config
+      items:
+        - key: internal_users.yml
+          path: internal_users.yml
+  extraVolumeMounts:
+    - mountPath: /opt/bitnami/elasticsearch/plugins/opendistro_security/securityconfig/config.yml
+      subPath: config.yml
+      name: config
+    - mountPath: /opt/bitnami/elasticsearch/plugins/opendistro_security/securityconfig/roles_mapping.yml
+      subPath: roles_mapping.yml
+      name: roles-mapping
+    - mountPath: /opt/bitnami/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
+      subPath: internal_users.yml
+      name: internal-users
+kibana:
+  image:
+    repository: sergbs/kibana
+    tag: 1
+  extraConfiguration:
+    elasticsearch.username: "kibanaserver"
+    elasticsearch.password: "kibanaserver"
+##  Uncomment if elastic Rest layer enabled
+#    elasticsearch.ssl.verificationMode: certificate
+#    elasticsearch.ssl.certificateAuthorities: "/opt/bitnami/kibana/certificates/root-ca.pem"
+    opendistro_security.auth.type: "basicauth"
+    opendistro_security.basicauth.forbidden_usernames: ["kibanaserver", "logstash"]
+    opendistro_security.accountinfo.enabled: true
+  volumePermissions:
+    enabled: true
+  elasticsearch:
+    hosts:
+    - "efk-elasticsearch-coordinating-only"
+    port: 9200
+##  Uncomment if elastic Rest layer enabled
+#    tls: true
+#  ingress:
+#    enabled: true
+#    hostname: kibana
+  service:
+    type: ClusterIP
+    port: 30010
+fluentd:
+  aggregator:
+    enabled: true
+    configMap: elasticsearch-output
+    extraEnv:
+    - name: ELASTICSEARCH_HOST
+      value: "efk-elasticsearch-coordinating-only"
+    - name: ELASTICSEARCH_PORT
+      value: "9200"
+  forwarder:
+    enabled: true
+    configMap: apache-log-parser
+    extraEnv:
+    - name: FLUENTD_DAEMON_USER
+      value: root
+    - name: FLUENTD_DAEMON_GROUP
+      value: root
