@@ -43,29 +43,29 @@
    Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
 
 7. Развертывание приложения Shop <p>
-   Перейти в hemcharts_shop и выполнить команду helm install shop ./shop/ -f value.yml
+   Перейти в hemcharts_shop и выполнить команду ``helm install shop ./shop/ -f value.yml``
 
 8. GitLab CI SHOP<p>
    
    Передать код приложения из дериектории helmshop в репозиторий gitlab ci 
    
-   В разделе Operations - k8s - Applications установите install Gitlab Runners для установки RUNNDER
+   В разделе ``Operations - k8s - Applications`` установите ``install Gitlab Runners`` для установки RUNNDER
    
    Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится
 
-   Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду kubctl get svc -n istio-system  
-9. Развертывание системы мониторинга kiali, protheus, grafana <p>
-   Перейти в istiorelease и выполнить kubeclt apply -f .
+   Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду ``kubctl get svc -n istio-system `` 
+9. Развертывание системы мониторинга kiali, prometheus, grafana <p>
+   Перейти в ``istiorelease`` и выполнить ``kubeclt apply -f .``
    kubectl get pods -n istio-system 
-10. Развертывание EFK
-    Перейти в efk, выполнить helm upgrade --install efk -n efk .
+10. Развертывание EFK <p>
+    Перейти в ``efk``, выполнить ``helm upgrade --install efk -n efk .``
 11. Проверка работоспособности <p>
     Для доступа к системам мониторинга внести записи в hosts вашей операционной системы 
 
-   <external-ip nginx> prometheus
-   <external-ip nginx> grafana
-   <external-ip nginx> kiali
-   <external-ip nginx> kibana
-   <external-ip nginx> shop
-
+   ``<external-ip nginx> prometheus``
+   ``<external-ip nginx> grafana``
+   ``<external-ip nginx> kiali``
+   ``<external-ip nginx> kibana``
+   ``<external-ip nginx> shop``
+   
    Перейти в браузере, к примеру http://shop/
