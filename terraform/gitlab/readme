@@ -1,0 +1,2 @@
+First, you need create gitlab image. See readme in packer directory.
+After that you must Define variable in variables.tf 
