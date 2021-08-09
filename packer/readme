@@ -1,4 +1,5 @@
 Define variables in variables.json befor starting
-To create service_account_key_file run
-  $ yc iam key create --service-account-name <service account name> --output key.json
-packer build -var-file=variables.json gitlab.json
+To create service_account_key_file, run
+ `` $ yc iam key create --service-account-name <service account name> --output key.json ``
+To create image install packer and runcommand:
+`` packer build -var-file=variables.json gitlab.json ``
