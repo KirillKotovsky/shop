@@ -1,0 +1,16 @@
+{
+    "builders": [
+    {
+    "type": "yandex",
+    "service_account_key_file": "{{user `service_account_key_file`}}",
+    "folder_id": "{{user `folder_id`}}",
+    "image_name": "gitlab-{{timestamp}}",
+    "image_family": "gitlab-20-base",
+    "source_image_family": "gitlab",
+    "zone": "ru-central1-a",
+    "ssh_username": "ubuntu",
+    "use_ipv4_nat": "true",
+    "platform_id": "{{user `platform_id`}}"
+    }
+    ]
+    }
