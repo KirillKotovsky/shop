@@ -37,7 +37,7 @@
 
 5. Развертывание Istio <p>
    Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). 
-   Выполнить ```sh kubectl apply -f ./mesh_monitoring  ```
+   Выполнить ``` kubectl apply -f ./mesh_monitoring  ```
 
 6. Установка NGINX Controller <p>
    Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
