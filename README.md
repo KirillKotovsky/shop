@@ -1,66 +1,65 @@
-# Проектная работа в рамках обучающего курса Otus -</p> "Devops практики и инструменты".
-Данный проект демонстрирует развертывание микросервисного приложения https://github.com/GoogleCloudPlatform/microservices-demo в kubernetes <p>
-Автоматизация развертывания kubernetes cluster выполнена при помощи terraform для yandex cloud <p>
-В качестве менеджера установки приложения в kubernetes используются helm 3 <p>
-Деплой приложения в кластер осуществляется c помощью gitlab ci <p>
-Мониторинг приложения производится с использованием Istio, Prometheus, визуализация в Kiali, Grafana <p>
+# Devops practices and tools (Graduation work)
+This project demonstrates the deployment of a micro service application https://github.com/GoogleCloudPlatform/microservices-demo in kubernetes <p>
+Kubernetes cluster deployment automation is performed using terraform for yandex cloud <p>
+Helm 3 is used as a configuration management tool for Kubernetes <p>
+CI\CD process based on Gitlab<p>
+Application monitoring is performed using Istio, Prometheus, visualization in Kiali, Grafana <p>
 
-Для запуска проекта необходимо: <p>
-1. Подключение к Yandex Cloud<p>
-   Покдлючиться к аккаунту ндекс облака. 
+To start the project, you need: <p>
+1. Connect to Yandex Cloud account<p> 
 
-2. Создание класстера и группы ресурсов. <p>
-   Перейти в каталог terraform предвариельно заполнить секцию provider и resource в main.tf.
-   Переименовать terraform.tfvars.example в terraform.tfvars и заполнить переменные согласно вашим параметрам яндекс облака.
-   Выполнить ``terraform apply``
-   В процессе должен будет создаться класстер и группа ресурсов.
+2. Create cluster and group resourses <p>
+Go to the terraform directory and pre-fill in the provider and resource section in main.tf .
+Rename terraform.tfvars.example to terraform.tfvars and fill in the variables according to your yandex cloud parameters.
+Execute "terraform apply`
+In the process, a cluster and a resource group will have to be created.
 
-3. Рарзвертывание GitLab <p>
-   Развернуть виртуальную машину с Gitlab CI, используя кода в директории terraform (см. terraform/gitlab/readme )<p>
+3. Deploying GitLab <p>
+   Deploy a virtual machine with Gitlab CI using the code in the terraform directory (see terraform/gitlab/readme)<p>
 
-4. Интеграция с GitLab <p>
-   Произвести интеграцию Gitlab CI c кластером kubernetes (в текущем проекте - операции - Kubernetes, подключиться к кластеру ):
+4. Integration with GitLab <p>
+   Integrate Gitlab CI with the kubernetes cluster (in the current project - operations - Kubernetes, connect to the cluster):
    
-   4.1 Вывести адрес для подключения
+   4.1 Use the address output in the following command
  
  ``` kubectl cluster-info | grep -E 'Kubernetes master|Kubernetes control plane' | awk '/http/ {print $NF}' ```
 
-   4.2  ``` kubectl get secrets```  Вывод секрета использовать в следующей команде, подставив свое значение токена для получения сертификата
+   4.2  ``` kubectl get secrets```  Use the secret output in the following command, substituting your token value to get the certificate
 
    4.3 ``` kubectl get secret default-token-9qdr9 -o jsonpath="{['data']['ca\.crt']}" | base64 --decode  ```
 
-   4.4 Применить настройки из файла в репозитории ``` kubectl apply -f gitlab_k8s_integation/gitlab-admin-service-account.yaml ```
+   4.4 Apply settings from a file in the repository ``` kubectl apply -f gitlab_k8s_integation/gitlab-admin-service-account.yaml ```
     
-   4.5 Получить токе ``kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ``
+   4.5 Get token ``kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep gitlab | awk '{print $1}') ``
  
-   4.6 На вкладке Aplication добавить gitlab-runner в кластер </p>
+   4.6 On the Application tab, add gitlab-runner to the cluster </p>
 
-5. Развертывание Istio <p>
-   Установить Istio согласно [инструкции]( https://istio.io/latest/docs/setup/getting-started/). 
-   Выполнить ``` kubectl apply -f ./mesh_monitoring  ```
+5. Deployment Istio <p>
+   Install Istio according to [instructions]( https://istio.io/latest/docs/setup/getting-started/). 
+   Run the following command ``` kubectl apply -f ./mesh_monitoring  ```
 
-6. Установка NGINX Controller <p>
-   Установить nginx выполнив команду ``helm install nginx nginx-ingress-controller -n istio-system``
+6. Install NGINX Controller <p>
+   Install nginx by running the command ``helm install nginx nginx-ingress-controller -n istio-system``
 
-7. Развертывание приложения Shop <p>
-   Перейти в hemcharts_shop и выполнить команду ``helm install shop ./shop/ -f value.yml``
+7. Deployment the Shop application <p>
+   Go to helmcharts_shop and run the command ``helm install shop ./shop/ -f value.yml``
 
 8. GitLab CI SHOP<p>
    
-   Передать код приложения из дериектории helmshop в репозиторий gitlab ci 
+   Transfer the application code from the helmshop directory to the gitlab ci repository 
    
-   В разделе ``Operations - k8s - Applications`` установите ``install Gitlab Runners`` для установки RUNNER
+   In section ``Operations - k8s - Applications`` set ``install Gitlab Runners`` for install RUNNER 
    
-   Запустить pipline в ручном режиме, на выбранном окружении, название окружения соответствует названию namespace, в котором он запустится
+  Start the pipeline in manual mode, on the selected environment, the name of the environment corresponds to the name of the namespace in which it will start
 
-   Проверить результат можно перейдя на http://external-ip адресс балансировщика istio-ingressgateway. Найти ip адрес можно выполнив команду ``kubctl get svc -n istio-system `` 
-9. Развертывание системы мониторинга kiali, prometheus, grafana <p>
-   Перейти в ``istiorelease`` и выполнить ``kubeclt apply -f .``
+   You can check the result by going to the istio-ingressgateway address http://external-ip. You can find the ip address by running the command ``kubctl get svc -n istio-system `` 
+9. Deployment monitoring system (kiali, prometheus, grafana) <p>
+   Go to ``istiorelease`` and run ``kubeclt apply -f .``
    kubectl get pods -n istio-system 
-10. Развертывание EFK <p>
-    Перейти в ``efk``, выполнить ``helm upgrade --install efk -n efk .``
-11. Проверка работоспособности <p>
-    Для доступа к системам мониторинга внести записи в hosts вашей операционной системы 
+10. Deployment EFK <p>
+    Go to ``efk``, run ``helm upgrade --install efk -n efk .``
+11. Check the result <p>
+    To access monitoring systems, make entries in the hosts of your operating system
 
    ``<external-ip nginx> prometheus``
    ``<external-ip nginx> grafana``
@@ -68,4 +67,4 @@
    ``<external-ip nginx> kibana``
    ``<external-ip nginx> shop``
    
-   Перейти в браузере, к примеру http://shop/
+  Go to http://shop/
