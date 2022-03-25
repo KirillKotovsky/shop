@@ -28,7 +28,6 @@ resource "yandex_compute_instance" "gitlabci" {
   }
 
   network_interface {
-    # Указан id подсети default-ru-central1-a
     subnet_id = var.subnet_id
     nat       = true
   }
