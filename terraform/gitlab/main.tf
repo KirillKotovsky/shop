@@ -22,7 +22,6 @@ resource "yandex_compute_instance" "gitlabci" {
 
   boot_disk {
     initialize_params {
-      # Указать id образа созданного в предыдущем домашем задании
       image_id = var.image_id
       size = 20
     }
